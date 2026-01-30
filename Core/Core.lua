@@ -76,22 +76,23 @@ local Defaults = {
 MS.Defaults = Defaults
 
 function MinimapStats:OnInitialize()
-    MS.db = LibStub("AceDB-3.0"):New("MinimapStatsDB", Defaults)
-end
-
-function MinimapStats:InitializeUI()
-    MS:SetupSlashCommands()
-    MS:CreateTime()
-    MS:CreateSystemStats()
-    MS:CreateLocation()
-    MS:CreateCoordinates()
-    MS:CreateInstanceDifficulty()
-    MS:AssignTooltipScripts()
+    MS.db = LibStub("AceDB-3.0"):New("MinimapStatsDB", Defaults, true)
+    for key, value in pairs(Defaults) do
+        if MS.db.profile[key] == nil then
+            MS.db.profile[key] = value
+        end
+    end
 end
 
 function MinimapStats:OnEnable()
-    local addon = self
-    C_Timer.After(0, function()
-        addon:InitializeUI()
+    -- heistm: https://github.com/DaleHuntGB/MinimapStats/pull/3 - for the idea
+    C_Timer.After(0.1, function()
+        MS:SetupSlashCommands()
+        MS:CreateTime()
+        MS:CreateSystemStats()
+        MS:CreateLocation()
+        MS:CreateCoordinates()
+        MS:CreateInstanceDifficulty()
+        MS:AssignTooltipScripts()
     end)
 end
